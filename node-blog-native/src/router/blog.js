@@ -1,4 +1,4 @@
-const {getList, getDetail, createBlog, updateBlog} = require('../controller/blog');
+const {getList, getDetail, createBlog, updateBlog, delBlog} = require('../controller/blog');
 const {SuccessModel, ErrorModel} = require('../model/resModel');
 
 const handleRouter = (req, res) => {
@@ -26,7 +26,14 @@ const handleRouter = (req, res) => {
                 return new ErrorModel('update blog false');
 
             },
-            '/api/blog/del': () => 'del',
+            '/api/blog/del': (req) => {
+                let result = delBlog(id);
+                if (result) {
+                    return new SuccessModel();
+                }
+                return new ErrorModel('delete blog false');
+
+            },
         }
     };
 

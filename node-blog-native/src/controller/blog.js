@@ -34,7 +34,10 @@ const createBlog = (data = {}) => {
 };
 
 const updateBlog = (id, data = {}) => {
-    console.log('update', id, data)
+    return true;
+};
+
+const delBlog = (id) => {
     return true;
 };
 
@@ -42,5 +45,6 @@ module.exports = {
     getList,
     getDetail,
     createBlog,
-    updateBlog
+    updateBlog,
+    delBlog
 };
