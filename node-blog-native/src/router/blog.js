@@ -1,10 +1,16 @@
+const {getList} = require('../controller/blog');
+const {SuccessModel, ErrorModel} = require('../model/resModel');
+
 const handleRouter = (req, res) => {
-    const {method, url} = req;
-    const path = url.split('?')[0];
+    const {method, path} = req;
 
     const router = {
         GET: {
-            '/api/blog/list': () => 'list',
+            '/api/blog/list': (req, res) => {
+                let {author = '', keyword = ''} = req.query;
+                let list = getList(author, keyword);
+                return new SuccessModel(list);
+            },
             '/api/blog/detail': () => 'detail',
         },
         POST: {
@@ -14,15 +20,13 @@ const handleRouter = (req, res) => {
         }
     };
 
-    let msg;
+    let data;
     try {
-        msg = router[method][path]();
+        data = router[method][path](req, res);
     } catch (e) {
-        return;
+        
     }
-    return {
-        msg
-    };
+    return data;
 };
 
 module.exports = handleRouter;
