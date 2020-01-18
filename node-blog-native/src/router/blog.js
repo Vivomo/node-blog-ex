@@ -1,4 +1,4 @@
-const {getList} = require('../controller/blog');
+const {getList, getDetail} = require('../controller/blog');
 const {SuccessModel, ErrorModel} = require('../model/resModel');
 
 const handleRouter = (req, res) => {
@@ -8,10 +8,12 @@ const handleRouter = (req, res) => {
         GET: {
             '/api/blog/list': (req, res) => {
                 let {author = '', keyword = ''} = req.query;
-                let list = getList(author, keyword);
-                return new SuccessModel(list);
+                return new SuccessModel(getList(author, keyword));
             },
-            '/api/blog/detail': () => 'detail',
+            '/api/blog/detail': (req, res) => {
+                let {id} = req.query;
+                return new SuccessModel(getDetail(id));
+            },
         },
         POST: {
             '/api/blog/new': () => 'new',
@@ -24,7 +26,7 @@ const handleRouter = (req, res) => {
     try {
         data = router[method][path](req, res);
     } catch (e) {
-        
+
     }
     return data;
 };
