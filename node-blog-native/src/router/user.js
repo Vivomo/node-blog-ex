@@ -8,11 +8,12 @@ const handleRouter = (req, res) => {
         POST: {
             '/api/user/login': (req) => {
                 let {username, password} = req.body;
-                let result = login(username, password);
-                if (result) {
-                    return new SuccessModel();
-                }
-                return new ErrorModel('login false');
+                return login(username, password).then(result => {
+                    if (result.username) {
+                        return new SuccessModel();
+                    }
+                    return new ErrorModel('login false');
+                });
             },
         }
     };
