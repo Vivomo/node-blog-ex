@@ -40,6 +40,16 @@ const serverHandle = (req, res) => {
     req.path = path;
     req.query = queryStr.parse(search);
 
+    req.cookie = {};
+    const cookieStr = req.headers.cookie || '';
+    cookieStr.split(';').forEach(item => {
+        if (!item) {
+            return
+        }
+        const [k, v] = item.split('=');
+        req.cookie[k.trim()] = v.trim();
+    });
+
     getPostData(req).then((postData) => {
         req.body = postData;
 
