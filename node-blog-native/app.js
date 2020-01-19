@@ -43,9 +43,11 @@ const serverHandle = (req, res) => {
     getPostData(req).then((postData) => {
         req.body = postData;
 
-        let blogData = handleBlogRouter(req, res);
-        if (blogData) {
-            res.end(JSON.stringify(blogData));
+        let blogResult = handleBlogRouter(req, res);
+        if (blogResult) {
+            blogResult.then(blogData => {
+                res.end(JSON.stringify(blogData));
+            });
             return;
         }
 
