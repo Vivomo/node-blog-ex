@@ -5,6 +5,16 @@ const handleUserRouter = require('./src/router/user');
 
 const env = process.env.NODE_ENV;
 
+// 获取 cookie 的过期时间
+const getCookieExpires = () => {
+    const d = new Date();
+    d.setTime(d.getTime() + (24 * 60 * 60 * 1000))
+    return d.toGMTString()
+};
+
+// // session 数据
+const SESSION_DATA = {};
+
 const getPostData = (req) => {
     return new Promise((resolve, reject) => {
         if (req.method !== 'POST') {
@@ -50,10 +60,27 @@ const serverHandle = (req, res) => {
         req.cookie[k.trim()] = v.trim();
     });
 
+    // 解析 session
+    let needSetCookie = false
+    let userId = req.cookie.userid;
+    if (userId) {
+        if (!SESSION_DATA[userId]) {
+            SESSION_DATA[userId] = {}
+        }
+    } else {
+        needSetCookie = true;
+        userId = `${Date.now()}_${Math.random()}`;
+        SESSION_DATA[userId] = {}
+    }
+    req.session = SESSION_DATA[userId];
+
     getPostData(req).then((postData) => {
         req.body = postData;
 
         let blogResult = handleBlogRouter(req, res);
+        if (needSetCookie) {
+            res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`)
+        }
         if (blogResult) {
             blogResult.then(blogData => {
                 res.end(JSON.stringify(blogData));

@@ -1,2 +1,1 @@
-node-blog-native/node_modules/
-mysql-test/node_modules/
+**/node_modules/
