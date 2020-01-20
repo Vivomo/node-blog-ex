@@ -1,6 +1,15 @@
 const {getList, getDetail, createBlog, updateBlog, delBlog} = require('../controller/blog');
 const {SuccessModel, ErrorModel} = require('../model/resModel');
 
+// 统一的登录验证函数
+const loginCheck = (req) => {
+    if (!req.session.username) {
+        return Promise.resolve(
+            new ErrorModel('尚未登录')
+        )
+    }
+};
+
 const handleRouter = (req, res) => {
     let {method, path, query} = req;
     let {id} = query;
@@ -16,10 +25,20 @@ const handleRouter = (req, res) => {
         },
         POST: {
             '/api/blog/new': () => {
-                req.body.author = 'V';
+                const loginCheckResult = loginCheck(req);
+                if (loginCheckResult) {
+                    return loginCheckResult;
+                }
+
+                req.body.author = req.session.username;
                 return createBlog(req.body).then(data => new SuccessModel(data));
             },
             '/api/blog/update': () => {
+                const loginCheckResult = loginCheck(req);
+                if (loginCheckResult) {
+                    return loginCheckResult;
+                }
+
                 return updateBlog(id, req.body).then(result => {
                     if (result) {
                         return new SuccessModel();
@@ -28,7 +47,12 @@ const handleRouter = (req, res) => {
                 });
             },
             '/api/blog/del': () => {
-                return delBlog(id).then(result => {
+                const loginCheckResult = loginCheck(req);
+                if (loginCheckResult) {
+                    return loginCheckResult;
+                }
+
+                return delBlog(id, req.session.username).then(result => {
                     if (result) {
                         return new SuccessModel();
                     }
