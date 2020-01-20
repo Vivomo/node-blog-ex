@@ -11,8 +11,8 @@ const handleRouter = (req, res) => {
                 let {username, password} = req.body;
                 return login(username, password).then(result => {
                     if (result.username) {
-                        req.session.username = data.username;
-                        req.session.realname = data.realname;
+                        req.session.username = result.username;
+                        req.session.realname = result.realname;
                         // 同步到 redis
                         set(req.sessionId, req.session);
                         return new SuccessModel();

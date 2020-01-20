@@ -17,6 +17,14 @@ const handleRouter = (req, res) => {
         GET: {
             '/api/blog/list': () => {
                 let {author = '', keyword = ''} = req.query;
+                if (req.query.isadmin) {
+                    console.log(req.session);
+                    const loginCheckResult = loginCheck(req);
+                    if (loginCheckResult) {
+                        return loginCheckResult;
+                    }
+                    author = req.session.username
+                }
                 return getList(author, keyword).then(data => new SuccessModel(data));
             },
             '/api/blog/detail': () => {
