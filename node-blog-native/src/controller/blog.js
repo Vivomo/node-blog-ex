@@ -2,12 +2,12 @@ const { exec, escape } = require('../db/mysql');
 
 const getList = (author, keyword) => {
     author = escape(author);
-    keyword = escape(keyword);
     let sql = `select * from blogs where 1=1 `;
     if (author) {
-        sql += `and author='${author}' `;
+        sql += `and author=${author} `;
     }
     if (keyword) {
+        keyword = escape(keyword);
         sql += `and title like '%${keyword}%' `;
     }
     sql += `order by createtime desc;`;
@@ -18,7 +18,7 @@ const getList = (author, keyword) => {
 
 const getDetail = (id) => {
     id = escape(id);
-    const sql = `select * from blogs where id='${id}'`;
+    const sql = `select * from blogs where id=${id}`;
     return exec(sql).then(rows => {
         return rows[0]
     });
@@ -33,8 +33,9 @@ const createBlog = (data = {}) => {
 
     const sql = `
         insert into blogs (title, content, createtime, author)
-        values ('${title}', '${content}', ${createTime}, '${author}');
+        values (${title}, ${content}, ${createTime}, ${author});
     `;
+    console.log('sql', sql);
 
     return exec(sql).then(insertData => {
         return {
@@ -49,14 +50,14 @@ const updateBlog = (id, data = {}) => {
     title = escape(title);
     content = escape(content);
     const sql = `
-        update blogs set title='${title}', content='${content}' where id=${id}
+        update blogs set title=${title}, content=${content} where id=${id}
     `;
     return exec(sql).then(updateData => updateData.affectedRows > 0);
 };
 
 const delBlog = (id, author='V') => {
     id = escape(id);
-    const sql = `delete from blogs where id='${id}' and author='${author}';`;
+    const sql = `delete from blogs where id=${id} and author=${author};`;
     return exec(sql).then(delData => delData.affectedRows > 0)
 };
 
