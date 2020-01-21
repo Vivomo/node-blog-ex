@@ -24,8 +24,8 @@ rl.on('line', (lineData) => {
     // 记录总行数
     sum++;
 
-    const arr = lineData.split(' -- ');
-    if (arr[2] && arr[2].indexOf('Chrome') > 0) {
+    const [,,agent] = lineData.split(' -- ');
+    if (agent && agent.indexOf('Chrome') > 0) {
         // 累加 chrome 的数量
         chromeNum++
     }
