@@ -1,9 +1,10 @@
 const { exec, escape } = require('../db/mysql');
+const xss = require('xss');
 
 const getList = (author, keyword) => {
-    author = escape(author);
     let sql = `select * from blogs where 1=1 `;
     if (author) {
+        author = escape(author);
         sql += `and author=${author} `;
     }
     if (keyword) {
@@ -12,7 +13,6 @@ const getList = (author, keyword) => {
     }
     sql += `order by createtime desc;`;
 
-    // 返回 promise
     return exec(sql)
 };
 
@@ -26,8 +26,8 @@ const getDetail = (id) => {
 
 const createBlog = (data = {}) => {
     let {title, content, author} = data;
-    title = escape(title);
-    content = escape(content);
+    title = xss(escape(title));
+    content = xss(escape(content));
     author = escape(author);
     const createTime = Date.now();
 
@@ -47,8 +47,8 @@ const createBlog = (data = {}) => {
 const updateBlog = (id, data = {}) => {
     let {title, content} = data;
     id = escape(id);
-    title = escape(title);
-    content = escape(content);
+    title = xss(escape(title));
+    content = xss(escape(content));
     const sql = `
         update blogs set title=${title}, content=${content} where id=${id}
     `;
