@@ -18,7 +18,6 @@ const handleRouter = (req, res) => {
             '/api/blog/list': () => {
                 let {author = '', keyword = ''} = req.query;
                 if (req.query.isadmin) {
-                    console.log(req.session);
                     const loginCheckResult = loginCheck(req);
                     if (loginCheckResult) {
                         return loginCheckResult;
