@@ -17,7 +17,7 @@ class BaseModel {
 class SuccessModel extends BaseModel {
     constructor(data, msg) {
         super(data, msg);
-        this.errNo = 0;
+        this.code = 200;
     }
 }
 
@@ -25,7 +25,7 @@ class SuccessModel extends BaseModel {
 class ErrorModel extends BaseModel {
     constructor(data, msg) {
         super(data, msg);
-        this.errNo = -1;
+        this.code = 500;
     }
 }
 

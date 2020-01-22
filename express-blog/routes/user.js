@@ -1,13 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.post('/login', function(req, res, next) {
+const {login} = require('../controller/user');
+const {SuccessModel, ErrorModel} = require('../model/resModel');
+
+router.post('/login', function(req, res) {
     let {username, password} = req.body;
-    res.json({
-        code: 200,
-        data: {username, password}
-    })
+    return login(username, password).then(result => {
+        if (result.username) {
+            req.session.username = result.username;
+            req.session.realname = result.realname;
+
+            res.json(new SuccessModel());
+            return;
+        }
+        res.json(new ErrorModel('login false'));
+    });
 });
 
 module.exports = router;

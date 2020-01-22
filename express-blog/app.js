@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const session = require('express-session');
 
 const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
@@ -14,7 +15,14 @@ app.use(logger('dev'));
 app.use(express.json()); // 获取post data(json格式) => req.body
 app.use(express.urlencoded({ extended: false }));// 获取post data(form data格式) => req.body
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: '#v',
+    cookie: {
+        path: '/',
+        httpOnly: true,
+        maxAge: 86400000
+    }
+}));
 
 app.use('/api/blog', blogRouter);
 app.use('/api/user', userRouter);
