@@ -55,9 +55,9 @@ const updateBlog = (id, data = {}) => {
     return exec(sql).then(updateData => updateData.affectedRows > 0);
 };
 
-const delBlog = (id, author='V') => {
+const delBlog = (id, author) => {
     id = escape(id);
-    const sql = `delete from blogs where id=${id} and author=${author};`;
+    const sql = `delete from blogs where id=${id} and author='${author}';`;
     return exec(sql).then(delData => delData.affectedRows > 0)
 };
 
