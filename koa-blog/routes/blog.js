@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const {
     getList,
     getDetail,
-    newBlog,
+    createBlog,
     updateBlog,
     delBlog
 } = require('../controller/blog');
@@ -39,7 +39,7 @@ router.get('/detail', async function (ctx, next) {
 router.post('/new', loginCheck, async function (ctx, next) {
     const body = ctx.request.body;
     body.author = ctx.session.username;
-    const data = await newBlog(body);
+    const data = await createBlog(body);
     ctx.body = new SuccessModel(data)
 });
 
