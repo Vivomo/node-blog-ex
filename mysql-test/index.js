@@ -6,7 +6,7 @@ const con = mysql.createConnection({
     user: 'root',
     password: '000000',
     port: '3306',
-    database: 'node_blog'
+    database: 'blog'
 });
 
 // 开始连接
